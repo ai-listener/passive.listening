@@ -6,8 +6,7 @@ async function sendMessage() {
     const text = input.value.trim();
     if (text === "") return;
 
-    // 質問は表示するが、回答欄（chat-log）には「あなた」の質問文を残すのみ。
-    displayMessage("あなた", text, "user");
+    // 回答欄から質問文を削除するため、ここにあった displayMessage("あなた", ...) を削除しました。
     input.value = "";
     
     displayMessage("Geminiさん", "……（あなたの心に深く寄り添い、言葉を紡いでいます）", "machine", "loading");
@@ -21,7 +20,6 @@ async function sendMessage() {
     const aiResponse = await callGemini(text);
     removeLoading();
     
-    // 質問文を含まず、AIの回答のみを表示するように変更
     displayHTMLMessage("Geminiさんからの優しいアドバイス", aiResponse, "machine");
 }
 
@@ -71,7 +69,7 @@ function displayHTMLMessage(sender, text, className) {
         .replace(/<color2>/g, '<span style="color: #f06292;">') 
         .replace(/<color3>/g, '<span style="color: #ba68c8;">') 
         .replace(/<color4>/g, '<span style="color: #4db6ac; font-weight: bold;">') 
-        .replace(/<\/color\d>/g, '</span><br>'); // 一行開けず、改行のみに変更
+        .replace(/<\/color\d>/g, '</span><br>'); 
 
     div.innerHTML = `<strong style="color: #555;">${sender}</strong>:<br>${formattedText}`;
     chatLog.appendChild(div);
