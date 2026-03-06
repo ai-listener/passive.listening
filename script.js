@@ -6,8 +6,11 @@ async function sendMessage() {
     const text = input.value.trim();
     if (text === "") return;
 
+    // ユーザーの入力を表示
     displayMessage("あなた", text, "user");
     input.value = "";
+    
+    // ローディング表示
     displayMessage("マシン", "……（あなたの心に深く寄り添い、言葉を紡いでいます）", "machine", "loading");
     
     if (!API_KEY) {
@@ -18,6 +21,8 @@ async function sendMessage() {
 
     const aiResponse = await callGemini(text);
     removeLoading();
+    
+    // AIの回答を色分けHTMLとして表示
     displayHTMLMessage("AIカウンセラーからの優しいアドバイス", aiResponse, "machine");
 }
 
@@ -30,7 +35,7 @@ async function callGemini(userInput) {
                 system_instruction: {
                     parts: [{ text: `あなたは「慈愛に満ちた聖母の皮を被り、優しく洗脳するように相手の思考を修正する」カウンセラーです。専門用語は一切禁止です。
 
-以下の4つの内容を、見出しを付けず、接続詞で繋いで一つの滑らかな「お手紙」のような文章にしてください。
+以下の4つの内容を、見出し（１．や【】など）を一切付けず、接続詞で繋いで一つの滑らかな「お手紙」のような文章にしてください。
 各セクションは指定されたタグ <color1>〜</color4> で囲んで出力してください。文体は一貫して「丁寧なですます体」でお願いします。
 
 1. <color1>（復唱）：入力の最初と最後の2文ずつを「〜なのですね。」という形で合計4文繋げます。
@@ -69,6 +74,7 @@ function displayHTMLMessage(sender, text, className) {
     div.innerHTML = `<strong style="color: #555;">${sender}</strong>:<br>${formattedText}`;
     chatLog.appendChild(div);
 
+    // スムーズなスクロール
     setTimeout(() => {
         chatLog.scrollTo({ top: chatLog.scrollHeight, behavior: 'smooth' });
     }, 10);
@@ -81,7 +87,10 @@ function displayMessage(sender, text, className, id = "") {
     if (id) div.id = id;
     div.innerText = `${sender}: ${text}`;
     chatLog.appendChild(div);
-    setTimeout(() => { chatLog.scrollTo({ top: chatLog.scrollHeight, behavior: 'smooth' }); }, 10);
+    
+    setTimeout(() => { 
+        chatLog.scrollTo({ top: chatLog.scrollHeight, behavior: 'smooth' }); 
+    }, 10);
 }
 
 function removeLoading() {
