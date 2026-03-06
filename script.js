@@ -9,7 +9,7 @@ async function sendMessage() {
     displayMessage("あなた", text, "user");
     input.value = "";
     
-    displayMessage("マシン", "……（あなたの心に深く寄り添い、言葉を紡いでいます）", "machine", "loading");
+    displayMessage("Geminiさん", "……（あなたの心に深く寄り添い、言葉を紡いでいます）", "machine", "loading");
     
     if (!API_KEY) {
         removeLoading();
