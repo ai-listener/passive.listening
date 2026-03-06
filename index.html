@@ -111,6 +111,15 @@
             50% { opacity: 1; }
             100% { opacity: 0.5; }
         }
+
+        .disclaimer {
+            margin-top: 30px;
+            font-size: 0.75em;
+            color: #999;
+            line-height: 1.5;
+            text-align: center;
+            padding: 0 20px;
+        }
     </style>
 </head>
 <body>
@@ -122,9 +131,25 @@
     <div class="input-area">
         <textarea id="user-input" rows="5" placeholder="ここに悩みを書いてくださいね"></textarea>
         <button onclick="sendMessage()">💗 相談内容を送信する 💗</button>
+        
+        <details style="margin-top: 15px; font-size: 0.85em; color: #888; cursor: pointer;">
+            <summary>このAIカウンセリングについて（マニュアル）</summary>
+            <div style="background: #fffafa; padding: 15px; border-radius: 10px; border: 1px solid #ffdae0; margin-top: 10px; line-height: 1.6;">
+                <strong>【ご利用の際のご案内】</strong><br>
+                ・あなたの言葉をそのまま受け止め、心に寄り添うカウンセリングを行います。<br>
+                ・科学的心理療法《認知行動療法》の理論に基づいています。<br>
+                ・Geminiさんは、あなたの思考の癖を「魂の曇り」として優しく整え、新しい視点を提示します。<br>
+                ・回答が表示されたら、ぜひ最初の一行目からじっくりと読んでみてください。<br>
+                ・入力した相談内容は、送信後もそのまま残ります。
+            </div>
+        </details>
     </div>
 
     <div id="chat-log"></div>
+
+    <div class="disclaimer">
+        ※本アプリは気づきを支援するもので、医学的診断・治療や本格的なカウンセリングを代替しません。本ツールの使用により生じたいかなる結果についても運営者は責任を負いません。あくまでも参考程度にしてください。
+    </div>
 
     <script src="env-config.js"></script>
     <script src="script.js"></script>
