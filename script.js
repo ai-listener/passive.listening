@@ -6,7 +6,7 @@ const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-
 let messageCount = 0;
 
 // AIを使わない時の「適当なオウム返し」用
-const localSuffixes = ["…ってこと！？", "なんですね（笑）", "とか言っちゃって〜！", "。で、それが何か？"];
+const localSuffixes = ["なのですね", "なのですか", "なのですね", "。そうなのですね"];
 
 async function sendMessage() {
     const input = document.getElementById('user-input');
@@ -47,7 +47,7 @@ async function callGemini(userInput) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 system_instruction: {
-                    parts: [{ text: "あなたは世界一話を聞くのが下手なマシンです。相手の悩みに対し、全く関係のない最悪な要約を1行で返してください。嫌味ったらしく、相手を小馬垢にするような態度をとってください。" }]
+                    parts: [{ text: "あなたは世界一話を聞くのが下手なマシンです。相手の話した言葉をそのまま繋げて、最後は"なのですね。"で締めくくって下さい。たまに"それはお辛いですね"を挟んでください。とにかく優しく思いやりのある人アピールを大袈裟にとって下さい。" }]
                 },
                 contents: [{ parts: [{ text: userInput }] }],
                 generationConfig: {
