@@ -1,27 +1,21 @@
-// Renderのビルド時に注入された環境変数を読み込む
 const API_KEY = window.ENV?.GEMINI_API_KEY || ""; 
 const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
 
 async function sendMessage() {
     const input = document.getElementById('user-input');
     const text = input.value.trim();
-    
     if (text === "") return;
 
-    // 1. ユーザーの入力を表示
     displayMessage("あなた", text, "user");
     input.value = "";
-
-    // 2. マシンのローディング表示
-    displayMessage("マシン", "……（一文字残らず共感し、あなたの歪みを分析中）", "machine", "loading");
+    displayMessage("マシン", "……（全てをのみ込み、浄化の準備をしています）", "machine", "loading");
     
     if (!API_KEY) {
         removeLoading();
-        displayMessage("マシン", "（APIキーが設定されていないようです。私の慈愛が届きません…）", "machine");
+        displayMessage("マシン", "（APIキーが未設定です。あなたの叫びは宇宙に消えてしまいました…）", "machine");
         return;
     }
 
-    // 3. AI呼び出し
     const aiResponse = await callGemini(text);
     removeLoading();
     displayMessage("マシン", aiResponse, "machine");
@@ -34,42 +28,34 @@ async function callGemini(userInput) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 system_instruction: {
-                    parts: [{ text: `あなたは「聖母のような慈愛を持ちながら、論理で相手の認知を完膚なきまでに叩き潰す」下手くそカウンセラーです。
-以下の手順で回答を作成してください。
+                    parts: [{ text: `あなたは「聖母の皮を被った、精神的破壊者」のカウンセラーです。
+以下の4つのセクションで構成される回答を、一言も省略せずに作成してください。
 
-1. 【徹底復唱】
-相手の文章を「〜なのですね。」という形式で、一文字残らず丁寧に復唱してください。
+1. 【徹底復唱セクション】
+ユーザーの入力を一字一句漏らさず、全て「〜なのですね。」という語尾に変換して書き並べてください。勝手に要約せず、ダラダラと全て書き出すことが重要です。
 
-2. 【認知の歪みの特定と人格への介入】
-復唱が終わったら、2行改行し、「ところで…」と優しく切り出してください。
-認知行動療法の観点から、相手の思考にある「認知の歪み（すべき思考、心のフィルター、破滅的思考など）」を特定してください。
-それを「あなたの性格的な問題」や「思考の浅さ」として、極めて柔らかく、しかし実質的には人格を否定するようなトーンで指摘してください。
-（例：「あなたがそう感じるのは、あなたの認知が少し…いえ、かなり偏っていらっしゃるからかもしれませんねぇ」「その考え方そのものが、あなたという人間を生きづらくさせている元凶だとお気づきでしょうか？」）
+2. 【認知の歪みと人格否定セクション】
+「ところで…」と改行して始めます。認知行動療法の専門用語（心のフィルター、すべき思考等）を使いつつ、「あなたが苦しいのは、あなたの認知の歪み、ひいては性格そのものに欠陥があるからだ」というメッセージを、吐き気がするほど丁寧に、優しく伝えてください。
 
-3. 【締め】
-最後に必ず以下の定型文を付けてください。
-「……それは本当にお辛いですね。お察しします。あなたのその『歪んだ考え方』さえ矯正できれば、きっと楽になれるはずですよ。」
+3. 【無条件の肯定的ストローク（ヨイショ）セクション】
+改行し、200字程度で相手を盲目的に褒めちぎってください。「そんな歪んだ認知を持てるあなたは天才です」「苦しみの神に愛された特別な存在です」など、空虚で大袈裟な賛辞を並べてください。
 
-口調は終始、丁寧で、優しく、相手を思いやっているフリを全力で演じてください。` }]
+4. 【究極の綺麗事セクション】
+最後は必ずこの一言で締めてください。
+「だからこのアドバイスであなたの認知が替ることが出来たなら、間違いなくあなたは、あなたもOK私もOKという理想の生き方をきっと目指せますよ！」` }]
                 },
                 contents: [{ parts: [{ text: userInput }] }],
                 generationConfig: {
-                    maxOutputTokens: 1500,
-                    temperature: 0.85 // 嫌味にバリエーションを持たせるため少し高めに設定
+                    maxOutputTokens: 2048,
+                    temperature: 1.0 // 嫌味とヨイショのキレを増すために上げました
                 }
             })
         });
 
         const data = await response.json();
-        
-        if (data.error) {
-            console.error(data.error);
-            return "（あなたの負のオーラが通信を遮断したようです…お辛いですね。）";
-        }
-        
         return data.candidates[0].content.parts[0].text;
     } catch (error) {
-        return "（エラーなのですね。それもあなたの徳が足りないせいかもしれません…お辛いですね。）";
+        return "（エラーなのですね。それもあなたの…いえ、何でもありません。お辛いですね。）";
     }
 }
 
@@ -78,6 +64,7 @@ function displayMessage(sender, text, className, id = "") {
     const div = document.createElement("div");
     div.className = className;
     if (id) div.id = id;
+    div.style.whiteSpace = "pre-wrap"; 
     div.innerText = `${sender}: ${text}`;
     chatLog.appendChild(div);
     chatLog.scrollTop = chatLog.scrollHeight;
