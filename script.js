@@ -1,3 +1,4 @@
+// Renderのビルド時に注入された環境変数を読み込む
 const API_KEY = window.ENV?.GEMINI_API_KEY || ""; 
 const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
 
@@ -47,7 +48,7 @@ async function callGemini(userInput) {
                 contents: [{ parts: [{ text: userInput }] }],
                 generationConfig: {
                     maxOutputTokens: 2048,
-                    temperature: 1.0 // 嫌味とヨイショのキレを増すために上げました
+                    temperature: 1.0 
                 }
             })
         });
@@ -64,10 +65,21 @@ function displayMessage(sender, text, className, id = "") {
     const div = document.createElement("div");
     div.className = className;
     if (id) div.id = id;
+    
+    // 改行を正しく表示し、文字がはみ出さないように設定
     div.style.whiteSpace = "pre-wrap"; 
+    div.style.wordBreak = "break-all"; 
+    
     div.innerText = `${sender}: ${text}`;
     chatLog.appendChild(div);
-    chatLog.scrollTop = chatLog.scrollHeight;
+
+    // 描画が完了してから確実に一番下へスクロールさせる
+    setTimeout(() => {
+        chatLog.scrollTo({
+            top: chatLog.scrollHeight,
+            behavior: 'smooth' 
+        });
+    }, 10);
 }
 
 function removeLoading() {
