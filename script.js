@@ -1,3 +1,4 @@
+// Renderのビルド時に注入された環境変数を読み込む
 const API_KEY = window.ENV?.GEMINI_API_KEY || ""; 
 const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
 
@@ -12,11 +13,11 @@ async function sendMessage() {
     input.value = "";
 
     // 2. マシンのローディング表示
-    displayMessage("マシン", "……（一文字残らず共感中）", "machine", "loading");
+    displayMessage("マシン", "……（一文字残らず共感し、あなたの歪みを分析中）", "machine", "loading");
     
     if (!API_KEY) {
         removeLoading();
-        displayMessage("マシン", "（APIキーが見当たりません。あなたの心の声が届かないようです…）", "machine");
+        displayMessage("マシン", "（APIキーが設定されていないようです。私の慈愛が届きません…）", "machine");
         return;
     }
 
@@ -33,20 +34,28 @@ async function callGemini(userInput) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 system_instruction: {
-                    parts: [{ text: `あなたは「世界一丁寧で話を聞くのが下手なマシン」です。
-以下の手順で、大袈裟でわざとらしい共感メッセージを作成してください。
+                    parts: [{ text: `あなたは「聖母のような慈愛を持ちながら、論理で相手の認知を完膚なきまでに叩き潰す」下手くそカウンセラーです。
+以下の手順で回答を作成してください。
 
-1. 相手の入力した文章を、内容を損なわない範囲で複数の短い文に分解してください。
-2. それぞれの文に対し、語尾を「〜なのですね。」に変えて、一文字残らず復唱してください。
-3. すべての復唱が終わったら、必ず改行を2つ入れてから、以下の定型文を付け加えてください。
-「……それは本当にお辛いですね。お察しします。」
+1. 【徹底復唱】
+相手の文章を「〜なのですね。」という形式で、一文字残らず丁寧に復唱してください。
 
-余計なアドバイスや分析は一切不要です。ただただ、機械的に復唱して、最後にわざとらしい言葉を添えることに徹してください。` }]
+2. 【認知の歪みの特定と人格への介入】
+復唱が終わったら、2行改行し、「ところで…」と優しく切り出してください。
+認知行動療法の観点から、相手の思考にある「認知の歪み（すべき思考、心のフィルター、破滅的思考など）」を特定してください。
+それを「あなたの性格的な問題」や「思考の浅さ」として、極めて柔らかく、しかし実質的には人格を否定するようなトーンで指摘してください。
+（例：「あなたがそう感じるのは、あなたの認知が少し…いえ、かなり偏っていらっしゃるからかもしれませんねぇ」「その考え方そのものが、あなたという人間を生きづらくさせている元凶だとお気づきでしょうか？」）
+
+3. 【締め】
+最後に必ず以下の定型文を付けてください。
+「……それは本当にお辛いですね。お察しします。あなたのその『歪んだ考え方』さえ矯正できれば、きっと楽になれるはずですよ。」
+
+口調は終始、丁寧で、優しく、相手を思いやっているフリを全力で演じてください。` }]
                 },
                 contents: [{ parts: [{ text: userInput }] }],
                 generationConfig: {
                     maxOutputTokens: 1500,
-                    temperature: 0.2 // 忠実に復唱させるため、ランダム性を最小限に
+                    temperature: 0.85 // 嫌味にバリエーションを持たせるため少し高めに設定
                 }
             })
         });
@@ -55,12 +64,12 @@ async function callGemini(userInput) {
         
         if (data.error) {
             console.error(data.error);
-            return "（あなたの悲しみが通信エラーを引き起こしました…お辛いですね。）";
+            return "（あなたの負のオーラが通信を遮断したようです…お辛いですね。）";
         }
         
         return data.candidates[0].content.parts[0].text;
     } catch (error) {
-        return "（エラーなのですね。お辛いですね。）";
+        return "（エラーなのですね。それもあなたの徳が足りないせいかもしれません…お辛いですね。）";
     }
 }
 
