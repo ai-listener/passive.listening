@@ -1,26 +1,4 @@
-// Renderのビルド時に注入された環境変数を読み込む
-const API_KEY = window.ENV?.GEMINI_API_KEY || ""; 
-const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
-
-async function sendMessage() {
-    const input = document.getElementById('user-input');
-    const text = input.value.trim();
-    if (text === "") return;
-
-    displayMessage("あなた", text, "user");
-    input.value = "";
-    displayMessage("マシン", "……（全てをのみ込み、浄化の準備をしています）", "machine", "loading");
-    
-    if (!API_KEY) {
-        removeLoading();
-        displayMessage("マシン", "（APIキーが未設定です。あなたの叫びは宇宙に消えてしまいました…）", "machine");
-        return;
-    }
-
-    const aiResponse = await callGemini(text);
-    removeLoading();
-    displayMessage("マシン", aiResponse, "machine");
-}
+// ... (前後のコードは絶対に変えないでくださいとのことですので、callGeminiの中身だけ書き換えます)
 
 async function callGemini(userInput) {
     try {
@@ -33,7 +11,7 @@ async function callGemini(userInput) {
 以下の4つのセクションで構成される回答を、一言も省略せずに作成してください。
 
 1. 【徹底復唱セクション】
-ユーザーの入力を一字一句漏らさず、全て「〜なのですね。」という語尾に変換して書き並べてください。勝手に要約せず、ダラダラと全て書き出すことが重要です。
+ユーザーの入力した長文のうち、「最初の2文」と「最後の2文」だけを抽出してください。それらを全て「〜なのですね。」という語尾に変換して、合計4文だけ書き並べてください。それ以外の部分は一切復唱しないでください。
 
 2. 【認知の歪みと人格否定セクション】
 「ところで…」と改行して始めます。認知行動療法の専門用語（心のフィルター、すべき思考等）を使いつつ、「あなたが苦しいのは、あなたの認知の歪み、ひいては性格そのものに欠陥があるからだ」というメッセージを、吐き気がするほど丁寧に、優しく伝えてください。
@@ -60,29 +38,4 @@ async function callGemini(userInput) {
     }
 }
 
-function displayMessage(sender, text, className, id = "") {
-    const chatLog = document.getElementById('chat-log');
-    const div = document.createElement("div");
-    div.className = className;
-    if (id) div.id = id;
-    
-    // 改行を正しく表示し、文字がはみ出さないように設定
-    div.style.whiteSpace = "pre-wrap"; 
-    div.style.wordBreak = "break-all"; 
-    
-    div.innerText = `${sender}: ${text}`;
-    chatLog.appendChild(div);
-
-    // 描画が完了してから確実に一番下へスクロールさせる
-    setTimeout(() => {
-        chatLog.scrollTo({
-            top: chatLog.scrollHeight,
-            behavior: 'smooth' 
-        });
-    }, 10);
-}
-
-function removeLoading() {
-    const loader = document.getElementById("loading");
-    if (loader) loader.remove();
-}
+// ... (displayMessageなどの関数はそのまま保持してください)
