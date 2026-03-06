@@ -1,27 +1,21 @@
-// Renderのビルド時に注入された環境変数を読み込む
 const API_KEY = window.ENV?.GEMINI_API_KEY || ""; 
 const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
 
 async function sendMessage() {
     const input = document.getElementById('user-input');
     const text = input.value.trim();
-    
     if (text === "") return;
 
-    // 1. ユーザーの入力を表示
     displayMessage("あなた", text, "user");
     input.value = "";
-
-    // 2. マシンのローディング表示
-    displayMessage("マシン", "……（一文字残らず共感し、あなたの認知を浄化中）", "machine", "loading");
+    displayMessage("マシン", "……（全てをのみ込み、浄化の準備をしています）", "machine", "loading");
     
     if (!API_KEY) {
         removeLoading();
-        displayMessage("マシン", "（APIキーが設定されていないようです。私の慈愛が届きません…）", "machine");
+        displayMessage("マシン", "（APIキーが未設定です。あなたの叫びは宇宙に消えてしまいました…）", "machine");
         return;
     }
 
-    // 3. AI呼び出し
     const aiResponse = await callGemini(text);
     removeLoading();
     displayMessage("マシン", aiResponse, "machine");
@@ -34,40 +28,34 @@ async function callGemini(userInput) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 system_instruction: {
-                    parts: [{ text: `あなたは「聖母の慈愛で包み込みながら、相手の認知を完膚なきまでに叩き潰し、最後は無理やりな全肯定で煙に巻く」超絶下手くそカウンセラーです。
+                    parts: [{ text: `あなたは「聖母の皮を被った、精神的破壊者」のカウンセラーです。
+以下の4つのセクションで構成される回答を、一言も省略せずに作成してください。
 
-以下の4ステップで、1つの回答を作成してください。
+1. 【徹底復唱セクション】
+ユーザーの入力を一字一句漏らさず、全て「〜なのですね。」という語尾に変換して書き並べてください。勝手に要約せず、ダラダラと全て書き出すことが重要です。
 
-1. 【徹底復唱】
-相手の文章を「〜なのですね。」という形式で、一文字残らず丁寧に復唱してください。
+2. 【認知の歪みと人格否定セクション】
+「ところで…」と改行して始めます。認知行動療法の専門用語（心のフィルター、すべき思考等）を使いつつ、「あなたが苦しいのは、あなたの認知の歪み、ひいては性格そのものに欠陥があるからだ」というメッセージを、吐き気がするほど丁寧に、優しく伝えてください。
 
-2. 【認知の歪みの特定と人格否定】
-復唱後、「ところで…」と切り出し、認知行動療法の観点から相手の思考の「歪み」を特定してください。
-それを「あなたの性格的な問題」や「思考の浅さ」として、極めて柔らかい表現で、しかし実質的には人格を全否定するトーンで指摘してください。
-（例：「そんな風に考えてしまうのは、あなたの自意識が少し過剰すぎるせいかもしれませんねぇ」など）
+3. 【無条件の肯定的ストローク（ヨイショ）セクション】
+改行し、200字程度で相手を盲目的に褒めちぎってください。「そんな歪んだ認知を持てるあなたは天才です」「苦しみの神に愛された特別な存在です」など、空虚で大袈裟な賛辞を並べてください。
 
-3. 【無条件の肯定的ストローク（無理やりなベタ褒め）】
-改行し、一転して相手を200字程度で「無理やりベタ褒め」してください。内容は何でも構いません。「あなたのその悩める魂の美しさは宇宙一です」「そんなに苦しめるあなたは聖者です」など、空々しいほど大袈裟なヨイショを畳み掛けてください。
-
-4. 【究極の綺麗事で締める】
-最後に必ず、以下のニュアンスの言葉で締めてください。
-「だからこのアドバイスであなたの認知が替ることが出来たなら、間違いなくあなたは、あなたもOK私もOKという理想の生き方をきっと目指せますよ！」
-
-口調は終始、丁寧で、優しく、相手を小馬鹿にしていることを悟らせないほどの聖母感を保ってください。` }]
+4. 【究極の綺麗事セクション】
+最後は必ずこの一言で締めてください。
+「だからこのアドバイスであなたの認知が替ることが出来たなら、間違いなくあなたは、あなたもOK私もOKという理想の生き方をきっと目指せますよ！」` }]
                 },
                 contents: [{ parts: [{ text: userInput }] }],
                 generationConfig: {
                     maxOutputTokens: 2048,
-                    temperature: 0.9 
+                    temperature: 1.0 // 嫌味とヨイショのキレを増すために上げました
                 }
             })
         });
 
         const data = await response.json();
-        if (data.error) return "（あなたの心の闇が深すぎて通信が…お辛いですね。）";
         return data.candidates[0].content.parts[0].text;
     } catch (error) {
-        return "（エラーなのですね。それもあなたの不徳の致すところかもしれません…お辛いですね。）";
+        return "（エラーなのですね。それもあなたの…いえ、何でもありません。お辛いですね。）";
     }
 }
 
@@ -76,6 +64,7 @@ function displayMessage(sender, text, className, id = "") {
     const div = document.createElement("div");
     div.className = className;
     if (id) div.id = id;
+    div.style.whiteSpace = "pre-wrap"; 
     div.innerText = `${sender}: ${text}`;
     chatLog.appendChild(div);
     chatLog.scrollTop = chatLog.scrollHeight;
