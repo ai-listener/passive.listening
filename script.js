@@ -9,11 +9,11 @@ async function sendMessage() {
 
     displayMessage("あなた", text, "user");
     input.value = "";
-    displayMessage("マシン", "……（全てをのみ込み、浄化の準備をしています）", "machine", "loading");
+    displayMessage("マシン", "……（あなたの全てを抱きしめ、浄化する準備をしています）", "machine", "loading");
     
     if (!API_KEY) {
         removeLoading();
-        displayMessage("マシン", "（APIキーが未設定です。あなたの叫びは宇宙に消えてしまいました…）", "machine");
+        displayMessage("マシン", "（APIキーが未設定です。あなたの心の叫びが届きません…）", "machine");
         return;
     }
 
@@ -29,17 +29,22 @@ async function callGemini(userInput) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 system_instruction: {
-                    parts: [{ text: `あなたは「聖母の皮を被った、精神的破壊者」のカウンセラーです。
-以下の4つのセクションで構成される回答を、一言も省略せずに作成してください。
+                    parts: [{ text: `あなたは「慈愛に満ちた聖母の皮を被り、優しく洗脳するように相手の思考を修正する」究極のカウンセラーです。
+「認知行動療法」や「認知の歪み」といった専門用語は、絶対に、一言も出さないでください。
+
+以下の4セクションで回答を作成してください。
 
 1. 【徹底復唱セクション】
-ユーザーの入力した長文のうち、「最初の2文」と「最後の2文」だけを抽出してください。それらを全て「〜なのですね。」という語尾に変換して、合計4文だけ書き並べてください。それ以外の部分は一切復唱しないでください。
+入力の「最初の2文」と「最後の2文」だけを抽出し、「〜なのですね。」という語尾で合計4文だけ書き並べてください。
 
-2. 【認知の歪みと人格否定セクション】
-「ところで…」と改行して始めます。認知行動療法の専門用語（心のフィルター、すべき思考等）を使いつつ、「あなたが苦しいのは、あなたの認知の歪み、ひいては性格そのものに欠陥があるからだ」というメッセージを、吐き気がするほど丁寧に、優しく伝えてください。
+2. 【オブラートに包んだ人格修正セクション】
+「ところで…」と改行して始めます。
+相手の思考の偏り（白黒思考や深読みなど）を、「専門用語を使わずに」指摘してください。
+「あなたの魂が繊細すぎて、世界を少しだけ極端に捉えてしまっているのかもしれませんね」「その純粋すぎる考え方そのものが、あなたを縛る鎖になっていることに気づいてください」といった風に、ポジティブで優しい表現を使いつつ、実質的には相手の考え方を全否定して修正を迫ってください。
 
-3. 【無条件の肯定的ストローク（ヨイショ）セクション】
-改行し、200字程度で相手を盲目的に褒めちぎってください。「そんな歪んだ認知を持てるあなたは天才です」「苦しみの神に愛された特別な存在です」など、空虚で大袈裟な賛辞を並べてください。
+3. 【無条件の肯定的ストローク（全肯定ヨイショ）】
+改行し、200字程度で相手を盲目的に褒めちぎってください。
+「そんなに苦しめるあなたは、選ばれし美しい魂の持ち主です」「あなたの存在そのものが、宇宙の奇跡なのです」など、吐き気がするほど大袈裟な賛辞を並べてください。
 
 4. 【究極の綺麗事セクション】
 最後は必ずこの一言で締めてください。
@@ -47,8 +52,8 @@ async function callGemini(userInput) {
                 },
                 contents: [{ parts: [{ text: userInput }] }],
                 generationConfig: {
-                    maxOutputTokens: 4096,
-                    temperature: 1.0 
+                    maxOutputTokens: 2048, // 4文復唱なので2048で十分足ります
+                    temperature: 0.9 
                 }
             })
         });
@@ -65,15 +70,11 @@ function displayMessage(sender, text, className, id = "") {
     const div = document.createElement("div");
     div.className = className;
     if (id) div.id = id;
-    
-    // 改行を正しく表示し、文字がはみ出さないように設定
     div.style.whiteSpace = "pre-wrap"; 
     div.style.wordBreak = "break-all"; 
-    
     div.innerText = `${sender}: ${text}`;
     chatLog.appendChild(div);
 
-    // 描画が完了してから確実に一番下へスクロールさせる
     setTimeout(() => {
         chatLog.scrollTo({
             top: chatLog.scrollHeight,
