@@ -20,7 +20,7 @@ async function sendMessage() {
     const aiResponse = await callGemini(text);
     removeLoading();
     
-    displayHTMLMessage("AIカウンセラーからの優しいアドバイス", aiResponse, "machine");
+    displayHTMLMessage("Geminiさんからの優しいアドバイス", aiResponse, "machine");
 }
 
 async function callGemini(userInput) {
@@ -65,7 +65,7 @@ function displayHTMLMessage(sender, text, className) {
         .replace(/<color2>/g, '<span style="color: #f06292;">') 
         .replace(/<color3>/g, '<span style="color: #ba68c8;">') 
         .replace(/<color4>/g, '<span style="color: #4db6ac; font-weight: bold;">') 
-        .replace(/<\/color\d>/g, '</span> '); 
+        .replace(/<\/color\d>/g, '</span><br><br>'); // 各セクションの後に改行を2ついれて開業
 
     div.innerHTML = `<strong style="color: #555;">${sender}</strong>:<br>${formattedText}`;
     chatLog.appendChild(div);
