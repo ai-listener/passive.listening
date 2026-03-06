@@ -3,10 +3,19 @@ const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-
 
 async function sendMessage() {
     const input = document.getElementById('user-input');
+    const passcodeField = document.getElementById('passcode-input');
     const text = input.value.trim();
+    const passcode = passcodeField.value.trim();
+
     if (text === "") return;
 
-    // 質問文は回答欄に表示せず、入力欄にも残したままにします
+    // パスコードチェック
+    if (passcode !== "future") {
+        alert("パスコードが正しくありません。");
+        return;
+    }
+
+    // 質問文は入力欄に残し、回答欄には表示しません
     
     displayMessage("Geminiさん", "……（あなたの心に深く寄り添い、言葉を紡いでいます）", "machine", "loading");
     
@@ -73,7 +82,7 @@ function displayHTMLMessage(sender, text, className) {
     div.innerHTML = `<strong style="color: #555;">${sender}</strong>:<br>${formattedText}`;
     chatLog.appendChild(div);
 
-    // 回答が表示された際、一番上（第一行）から見えるようにスクロールします
+    // 回答が表示された際、一番上（第一行）から見えるようにスクロール
     setTimeout(() => {
         chatLog.scrollTo({ top: 0, behavior: 'smooth' });
     }, 10);

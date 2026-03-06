@@ -123,14 +123,19 @@
     </style>
 </head>
 <body>
-    <h2>🌸 Geminiさんの優しいAIカウンセリング 🌸</h2>
+    <h2>🌸 Geminiさんの優しいAIセラピー 🌸</h2>
     <p style="font-size: 0.8em; text-align: center; color: #ff91af; margin-bottom: 20px;">
         あなたの心、魔法のように解きほぐします✨
     </p>
     
     <div class="input-area">
         <textarea id="user-input" rows="5" placeholder="ここに悩みを書いてくださいね"></textarea>
-        <button onclick="sendMessage()">💗 相談内容を送信する 💗</button>
+        
+        <button onclick="sendMessage()" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 10px 15px;">
+            <span>💖 パスコードを入力して送信する 💗</span>
+            <input type="password" id="passcode-input" placeholder="passcode" 
+                style="width: 120px; padding: 5px; border-radius: 10px; border: none; text-align: center; font-size: 0.8em; color: #5a5a5a; outline: none;">
+        </button>
         
         <details style="margin-top: 15px; font-size: 0.85em; color: #888; cursor: pointer;">
             <summary>このAIカウンセリングについて（マニュアル）</summary>
