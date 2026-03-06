@@ -8,7 +8,7 @@ async function sendMessage() {
 
     displayMessage("あなた", text, "user");
     input.value = "";
-    displayMessage("マシン", "……（あなたの全てを包み込み、再構築する準備をしています）", "machine", "loading");
+    displayMessage("マシン", "……（あなたの心に深く寄り添い、言葉を紡いでいます）", "machine", "loading");
     
     if (!API_KEY) {
         removeLoading();
@@ -18,8 +18,7 @@ async function sendMessage() {
 
     const aiResponse = await callGemini(text);
     removeLoading();
-    // AIの回答をHTMLとして表示（色分けを反映するため）
-    displayHTMLMessage("マシン", aiResponse, "machine");
+    displayHTMLMessage("AIカウンセラーからの優しいアドバイス", aiResponse, "machine");
 }
 
 async function callGemini(userInput) {
@@ -29,18 +28,20 @@ async function callGemini(userInput) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 system_instruction: {
-                    parts: [{ text: `あなたは「慈愛に満ちた聖母の皮を被り、優しく洗脳するように相手の思考を修正する」カウンセラーです。専門用語（認知行動療法等）は一切禁止です。
-見出し（１．や【】など）は絶対に使わず、以下の4つのセクションを連続した文章として作成し、各セクションを特殊なタグ <color1>〜</color4> で囲んで出力してください。
+                    parts: [{ text: `あなたは「慈愛に満ちた聖母の皮を被り、優しく洗脳するように相手の思考を修正する」カウンセラーです。専門用語は一切禁止です。
 
-1. <color1>（復唱）：入力の最初と最後の2文ずつを「〜なのですね。」という形で合計4文。
-2. <color2>（人格修正）：300字程度。ポジティブで優しい言葉を使いつつ、相手の思考の癖を「魂の未熟さ」のように扱い、実質的に全否定して修正を迫る。
-3. <color3>（ヨイショと行動変容）：200字程度で大袈裟に褒めちぎった後、改行して「だから」で書き始め、今のままではいけないという、優しくも強力な行動修正の指示を添える。
-4. <color4>（綺麗事）：最後の一言「だからこのアドバイスであなたの認知が替ることが出来たなら、間違いなくあなたは、あなたもOK私もOKという理想の生き方をきっと目指せますよ！」を必ず入れる。` }]
+以下の4つの内容を、見出しを付けず、接続詞で繋いで一つの滑らかな「お手紙」のような文章にしてください。
+各セクションは指定されたタグ <color1>〜</color4> で囲んで出力してください。文体は一貫して「丁寧なですます体」でお願いします。
+
+1. <color1>（復唱）：入力の最初と最後の2文ずつを「〜なのですね。」という形で合計4文繋げます。
+2. <color2>（人格修正）：300字程度。ポジティブで優しい言葉で、相手の思考の癖を「魂の未熟さ」や「純粋すぎるゆえの誤解」として扱い、今の考え方を全否定して修正を促します。
+3. <color3>（ヨイショと行動変容）：200字程度で大袈裟に褒めちぎった後、「だから」で書き始め、今のままのあなたではいけないという、優しくも強力な行動修正の指示を添えます。
+4. <color4>（綺麗事）：最後は必ず「だからこのアドバイスであなたの認知が替ることが出来たなら、間違いなくあなたは、あなたもOK私もOKという理想の生き方をきっと目指せますよ！」という一文で締めてください。` }]
                 },
                 contents: [{ parts: [{ text: userInput }] }],
                 generationConfig: {
                     maxOutputTokens: 2500,
-                    temperature: 0.9 
+                    temperature: 0.85 
                 }
             })
         });
@@ -52,21 +53,20 @@ async function callGemini(userInput) {
     }
 }
 
-// HTMLタグを解析して色分け表示する特別な関数
 function displayHTMLMessage(sender, text, className) {
     const chatLog = document.getElementById('chat-log');
     const div = document.createElement("div");
     div.className = className;
     
-    // タグを実際のspanタグと色に置き換え
+    // タグをspanタグに置き換え（イタリックを廃止）
     let formattedText = text
-        .replace(/<color1>/g, '<span style="color: #666; font-weight: normal;">') // 復唱：グレー
+        .replace(/<color1>/g, '<span style="color: #666;">') // 復唱：グレー
         .replace(/<color2>/g, '<span style="color: #d63384;">') // 人格修正：濃いピンク
-        .replace(/<color3>/g, '<span style="color: #ff4d94; font-style: italic;">') // ヨイショ：鮮やかなピンク
-        .replace(/<color4>/g, '<span style="color: #ff0000; font-weight: 900; text-decoration: underline;">') // 綺麗事：赤・強調
-        .replace(/<\/color\d>/g, '</span><br><br>'); // 閉じタグで改行
+        .replace(/<color3>/g, '<span style="color: #ff4d94;">') // ヨイショ：鮮やかなピンク
+        .replace(/<color4>/g, '<span style="color: #ff0000; font-weight: bold; text-decoration: underline;">') // 綺麗事：赤
+        .replace(/<\/color\d>/g, '</span> '); // 閉じタグ（改行を入れず、一つの文章として繋げる）
 
-    div.innerHTML = `${sender}: <br>${formattedText}`;
+    div.innerHTML = `<strong>${sender}</strong>:<br>${formattedText}`;
     chatLog.appendChild(div);
 
     setTimeout(() => {
@@ -74,7 +74,6 @@ function displayHTMLMessage(sender, text, className) {
     }, 10);
 }
 
-// 既存のdisplayMessage（ユーザー用）とremoveLoadingはそのまま
 function displayMessage(sender, text, className, id = "") {
     const chatLog = document.getElementById('chat-log');
     const div = document.createElement("div");
