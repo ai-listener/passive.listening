@@ -47,7 +47,7 @@ async function callGemini(userInput) {
                 },
                 contents: [{ parts: [{ text: userInput }] }],
                 generationConfig: {
-                    maxOutputTokens: 2048,
+                    maxOutputTokens: 4096,
                     temperature: 1.0 
                 }
             })
