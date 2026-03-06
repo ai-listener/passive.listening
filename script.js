@@ -8,38 +8,6 @@ let messageCount = 0;
 // AIを使わない時の「適当なオウム返し」用
 const localSuffixes = ["なのですね", "なのですか", "なのですね", "。そうなのですね"];
 
-async function sendMessage() {
-    const input = document.getElementById('user-input');
-    const chatLog = document.getElementById('chat-log');
-    const text = input.value.trim();
-    
-    if (text === "") return;
-
-    // 1. ユーザーの発言を表示
-    displayMessage("あなた", text, "user");
-    input.value = "";
-    messageCount++;
-
-    // 2. 「3回に1回」だけGeminiを呼び出す
-    if (messageCount % 3 === 0) {
-        displayMessage("マシン", "……（考え中）", "machine", "loading");
-        
-        if (!API_KEY) {
-            removeLoading();
-            displayMessage("マシン", "（APIキーが設定されてないみたい。やる気出ないわー）", "machine");
-            return;
-        }
-
-        const aiResponse = await callGemini(text);
-        removeLoading();
-        displayMessage("マシン", aiResponse, "machine");
-    } else {
-        // AIを使わずJavaScriptだけで適当に返す（API節約）
-        const suffix = localSuffixes[Math.floor(Math.random() * localSuffixes.length)];
-        displayMessage("マシン", text + suffix, "machine");
-    }
-}
-
 async function callGemini(userInput) {
     try {
         const response = await fetch(`${API_URL}?key=${API_KEY}`, {
@@ -47,7 +15,8 @@ async function callGemini(userInput) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 system_instruction: {
-                    parts: [{ text: "あなたは世界一話を聞くのが下手なマシンです。相手の話した言葉をそのまま繋げて、最後は"なのですね。"で締めくくって下さい。たまに"それはお辛いですね"を挟んでください。とにかく優しく思いやりのある人アピールを大袈裟にとって下さい。" }]
+                    // ここを ` (バッククォート) で囲むように修正しました
+                    parts: [{ text: `あなたは世界一話を聞くのが下手なマシンです。相手の話した言葉をそのまま繋げて、最後は「なのですね。」で締めくくって下さい。たまに「それはお辛いですね」を挟んでください。とにかく優しく思いやりのある人アピールを大袈裟にとって下さい。` }]
                 },
                 contents: [{ parts: [{ text: userInput }] }],
                 generationConfig: {
@@ -64,7 +33,6 @@ async function callGemini(userInput) {
         return "（エラーだよ。君の話が退屈すぎて、通信が切れたかもね）";
     }
 }
-
 function displayMessage(sender, text, className, id = "") {
     const chatLog = document.getElementById('chat-log');
     const div = document.createElement("div");
