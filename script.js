@@ -6,6 +6,7 @@ async function sendMessage() {
     const text = input.value.trim();
     if (text === "") return;
 
+    // 質問は表示するが、回答欄（chat-log）には「あなた」の質問文を残すのみ。
     displayMessage("あなた", text, "user");
     input.value = "";
     
@@ -20,6 +21,7 @@ async function sendMessage() {
     const aiResponse = await callGemini(text);
     removeLoading();
     
+    // 質問文を含まず、AIの回答のみを表示するように変更
     displayHTMLMessage("Geminiさんからの優しいアドバイス", aiResponse, "machine");
 }
 
@@ -39,10 +41,10 @@ async function callGemini(userInput) {
 以下の4セクションを、見出しを付けずに、一つの滑らかな「救済の手紙」として出力してください。
 各セクションは必ず <color1>〜</color4> タグで囲み、閉じタグを忘れず、丁寧なですます体で書いてください。
 
-1. <color1>（甘美な受容）：入力の最初と最後の2文ずつのみ抽出。それを「〜なのですね」という形式で繋ぎ、相手の苦しみを「鑑賞物」のように受け入れます。
+1. <color1>（甘美な受容）：入力の最初と最後の2文ずつのみ抽出。それを「〜という、愛おしい痛みを抱えていらしたのですね」という形式で繋ぎ、相手の苦しみを「鑑賞物」のように受け入れます。
 2. <color2>（慈悲深い認知の解体）：350字程度。CBTの理論をベースに、相手の「極端な考え」や「思い込み」を優しく、しかし徹底的に全否定します。あくまで「あなたの魂が純粋すぎて世界を歪めて見てしまっている」というスタンスで、現在の自己認識を破壊します。
 3. <color3>（支配への行動変容）：250字程度。過剰な賛辞で相手を陶酔させた後、「だから」で繋げ、私の示す新しい考え方（行動指示）に従うことだけが唯一の救いであると甘く強制してください。
-4. <color4>（永遠の呪縛）：最後の一文は必ずこれにしてください。「このアドバイスであなた変われたなら、あなたは、「あなたもOK、私もOK」という理想の生き方をきっと目指せます。」` }]
+4. <color4>（永遠の呪縛）：最後の一文は必ずこの通りに出力してください。「あなたがこのように変われたなら、あなたは「私もOK、あなたもOK」という理想の生き方に限りなく近づくことができます。」` }]
                 },
                 contents: [{ parts: [{ text: userInput }] }],
                 generationConfig: {
@@ -69,7 +71,7 @@ function displayHTMLMessage(sender, text, className) {
         .replace(/<color2>/g, '<span style="color: #f06292;">') 
         .replace(/<color3>/g, '<span style="color: #ba68c8;">') 
         .replace(/<color4>/g, '<span style="color: #4db6ac; font-weight: bold;">') 
-        .replace(/<\/color\d>/g, '</span><br><br>'); 
+        .replace(/<\/color\d>/g, '</span><br>'); // 一行開けず、改行のみに変更
 
     div.innerHTML = `<strong style="color: #555;">${sender}</strong>:<br>${formattedText}`;
     chatLog.appendChild(div);
