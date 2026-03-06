@@ -5,13 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>💗 下手くそ傾聴マシン 💗</title>
     <style>
-        /* ポップでかわいらしい全体デザイン */
         body { 
             font-family: 'Hiragino Maru Gothic ProN', 'Yu Gothic', sans-serif; 
             max-width: 700px; 
             margin: 20px auto; 
             padding: 20px; 
-            background: #fff0f5; /* ゆめかわな薄いピンク */
+            background: #fff0f5; 
             color: #5a5a5a;
         }
 
@@ -22,38 +21,6 @@
             font-size: 1.8em;
         }
 
-        #chat-log { 
-            height: 480px; 
-            overflow-y: auto; 
-            background: rgba(255, 255, 255, 0.9); 
-            border-radius: 25px; 
-            padding: 25px; 
-            margin-bottom: 20px; 
-            box-shadow: 0 8px 20px rgba(255, 182, 193, 0.4); 
-            border: 4px dashed #ffb6c1; /* 点線のボーダーでかわいく */
-        }
-
-        /* ユーザーの吹き出し */
-        .user { 
-            color: #7a7a7a; 
-            margin-bottom: 20px; 
-            text-align: right; 
-            padding-left: 20%; 
-            font-size: 0.85em; 
-        }
-
-        /* AIカウンセラーのメッセージエリア */
-        .machine { 
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 18px;
-            margin-bottom: 30px; 
-            box-shadow: 4px 4px 0px #ffc0cb;
-            line-height: 1.8;
-            position: relative;
-        }
-
-        /* 入力エリアの構成 */
         .input-area { 
             display: flex; 
             flex-direction: column; 
@@ -62,6 +29,7 @@
             padding: 20px;
             border-radius: 25px;
             box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            margin-bottom: 30px; 
         }
 
         textarea { 
@@ -81,13 +49,12 @@
             background: #ffffff;
         }
 
-        /* ボタンのデザイン */
         button { 
             padding: 15px; 
             background: linear-gradient(135deg, #ff69b4, #ffb6c1); 
             color: white; 
             border: none; 
-            border-radius: 50px; /* 丸いボタン */
+            border-radius: 50px; 
             cursor: pointer; 
             font-weight: bold; 
             font-size: 1.1em; 
@@ -105,7 +72,34 @@
             box-shadow: none;
         }
 
-        /* ローディングの演出 */
+        #chat-log { 
+            height: 480px; 
+            overflow-y: auto; 
+            background: rgba(255, 255, 255, 0.9); 
+            border-radius: 25px; 
+            padding: 25px; 
+            box-shadow: 0 8px 20px rgba(255, 182, 193, 0.4); 
+            border: 4px dashed #ffb6c1; 
+        }
+
+        .user { 
+            color: #7a7a7a; 
+            margin-bottom: 20px; 
+            text-align: right; 
+            padding-left: 20%; 
+            font-size: 0.85em; 
+        }
+
+        .machine { 
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 18px;
+            margin-bottom: 30px; 
+            box-shadow: 4px 4px 0px #ffc0cb;
+            line-height: 1.8;
+            position: relative;
+        }
+
         #loading {
             color: #ff69b4;
             font-style: italic;
@@ -122,15 +116,15 @@
 <body>
     <h2>🌸 下手くそ傾聴マシン 🌸</h2>
     <p style="font-size: 0.8em; text-align: center; color: #ff91af; margin-bottom: 20px;">
-        あなたの心、魔法のように（無理やり）解きほぐします✨
+        あなたの心、魔法のように解きほぐします✨
     </p>
     
-    <div id="chat-log"></div>
-    
     <div class="input-area">
-        <textarea id="user-input" rows="5" placeholder="ここに魂の叫びを込めてね...（100字以上推奨）"></textarea>
+        <textarea id="user-input" rows="5" placeholder="ここに魂の叫びを込めてね..."></textarea>
         <button onclick="sendMessage()">💗 魂の相談を送信する 💗</button>
     </div>
+
+    <div id="chat-log"></div>
 
     <script src="env-config.js"></script>
     <script src="script.js"></script>
