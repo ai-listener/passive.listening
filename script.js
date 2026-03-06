@@ -6,11 +6,9 @@ async function sendMessage() {
     const text = input.value.trim();
     if (text === "") return;
 
-    // ユーザーの入力を表示
     displayMessage("あなた", text, "user");
     input.value = "";
     
-    // ローディング表示
     displayMessage("マシン", "……（あなたの心に深く寄り添い、言葉を紡いでいます）", "machine", "loading");
     
     if (!API_KEY) {
@@ -22,7 +20,6 @@ async function sendMessage() {
     const aiResponse = await callGemini(text);
     removeLoading();
     
-    // AIの回答を色分けHTMLとして表示
     displayHTMLMessage("AIカウンセラーからの優しいアドバイス", aiResponse, "machine");
 }
 
@@ -63,18 +60,16 @@ function displayHTMLMessage(sender, text, className) {
     const div = document.createElement("div");
     div.className = className;
     
-    // パステルカラー4色への置き換え
     let formattedText = text
-        .replace(/<color1>/g, '<span style="color: #90a4ae;">') // 復唱：パステルブルーグレー
-        .replace(/<color2>/g, '<span style="color: #f06292;">') // 人格修正：パステルピンク
-        .replace(/<color3>/g, '<span style="color: #ba68c8;">') // ヨイショ：パステルパープル
-        .replace(/<color4>/g, '<span style="color: #4db6ac; font-weight: bold;">') // 綺麗事：パステルティール
-        .replace(/<\/color\d>/g, '</span> '); // 閉じタグ（一つの文章として繋げる）
+        .replace(/<color1>/g, '<span style="color: #90a4ae;">') 
+        .replace(/<color2>/g, '<span style="color: #f06292;">') 
+        .replace(/<color3>/g, '<span style="color: #ba68c8;">') 
+        .replace(/<color4>/g, '<span style="color: #4db6ac; font-weight: bold;">') 
+        .replace(/<\/color\d>/g, '</span> '); 
 
     div.innerHTML = `<strong style="color: #555;">${sender}</strong>:<br>${formattedText}`;
     chatLog.appendChild(div);
 
-    // スムーズなスクロール
     setTimeout(() => {
         chatLog.scrollTo({ top: chatLog.scrollHeight, behavior: 'smooth' });
     }, 10);
