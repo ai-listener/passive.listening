@@ -36,7 +36,7 @@ async function callGemini(userInput) {
 1. <color1>（復唱）：入力の最初と最後の2文ずつを「〜なのですね。」という形で合計4文繋げます。
 2. <color2>（人格修正）：300字程度。ポジティブで優しい言葉で、相手の思考の癖を「魂の未熟さ」や「純粋すぎるゆえの誤解」として扱い、今の考え方を全否定して修正を促します。
 3. <color3>（ヨイショと行動変容）：200字程度で大袈裟に褒めちぎった後、「だから」で書き始め、今のままのあなたではいけないという、優しくも強力な行動修正の指示を添えます。
-4. <color4>（綺麗事）：最後は必ず「だからこのアドバイスであなたの認知が替ることが出来たなら、間違いなくあなたは、あなたもOK私もOKという理想の生き方をきっと目指せますよ！」という一文で締めてください。` }]
+4. <color4>（綺麗事）：最後は必ず「このアドバイスであなた変われたなら、あなたは、「あなたもOK、私もOK」という理想の生き方をきっと目指せます。」という一文で締めてください。` }]
                 },
                 contents: [{ parts: [{ text: userInput }] }],
                 generationConfig: {
@@ -58,15 +58,15 @@ function displayHTMLMessage(sender, text, className) {
     const div = document.createElement("div");
     div.className = className;
     
-    // タグをspanタグに置き換え（イタリックを廃止）
+    // パステルカラー4色への置き換え
     let formattedText = text
-        .replace(/<color1>/g, '<span style="color: #666;">') // 復唱：グレー
-        .replace(/<color2>/g, '<span style="color: #d63384;">') // 人格修正：濃いピンク
-        .replace(/<color3>/g, '<span style="color: #ff4d94;">') // ヨイショ：鮮やかなピンク
-        .replace(/<color4>/g, '<span style="color: #ff0000; font-weight: bold; text-decoration: underline;">') // 綺麗事：赤
-        .replace(/<\/color\d>/g, '</span> '); // 閉じタグ（改行を入れず、一つの文章として繋げる）
+        .replace(/<color1>/g, '<span style="color: #90a4ae;">') // 復唱：パステルブルーグレー
+        .replace(/<color2>/g, '<span style="color: #f06292;">') // 人格修正：パステルピンク
+        .replace(/<color3>/g, '<span style="color: #ba68c8;">') // ヨイショ：パステルパープル
+        .replace(/<color4>/g, '<span style="color: #4db6ac; font-weight: bold;">') // 綺麗事：パステルティール
+        .replace(/<\/color\d>/g, '</span> '); // 閉じタグ（一つの文章として繋げる）
 
-    div.innerHTML = `<strong>${sender}</strong>:<br>${formattedText}`;
+    div.innerHTML = `<strong style="color: #555;">${sender}</strong>:<br>${formattedText}`;
     chatLog.appendChild(div);
 
     setTimeout(() => {
