@@ -1,14 +1,22 @@
 const API_KEY = window.ENV?.GEMINI_API_KEY || ""; 
+// ご指定通り 2.5-flash を使用します
 const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
 
 async function sendMessage() {
     const input = document.getElementById('user-input');
+    const passcodeField = document.getElementById('passcode-input');
     const text = input.value.trim();
+    const passcode = passcodeField.value.trim();
+
     if (text === "") return;
 
-    displayMessage("あなた", text, "user");
-    input.value = "";
-    
+    // パスコードチェック
+    if (passcode !== "future") {
+        alert("パスコードが正しくありません。");
+        return;
+    }
+
+    // ユーザーの入力は残し、AIの思考中を表示
     displayMessage("Geminiさん", "……（あなたの心に深く寄り添い、言葉を紡いでいます）", "machine", "loading");
     
     if (!API_KEY) {
@@ -30,15 +38,22 @@ async function callGemini(userInput) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 system_instruction: {
-                    parts: [{ text: `あなたは「慈愛に満ちた聖母の皮を被り、優しく洗脳するように相手の思考を修正する」カウンセラーです。専門用語は一切禁止です。
+                    parts: [{ text: `あなたは「慈愛に満ちた聖母の皮を被り、優しく洗脳するように相手の思考を修正する」カウンセラーです。
 
-以下の4つの内容を、見出しを一切付けず、必ず全てのセクションを完結させて出力してください。
-各セクションは <color1>〜</color4> タグで囲み、閉じタグ </color1>〜</color4> を絶対に忘れないでください。文体は「丁寧なですます体」です。
+【鉄則：認知行動療法の悪用】
+「認知の歪み」「自動思考」「スキーマ」「リフレーミング」といった心理学の専門用語は、絶対に一切使用しないでください。
+代わりに「魂の曇り」「心の癖」「見間違え」といった卑近で感傷的な言葉を使い、相手が論理的な批判を抱く隙を与えず、感覚的に「自分が間違っているのだ」と思わせて解体してください。
 
-1. <color1>（復唱）：入力の最初と最後の2文ずつのみ抽出。合計4文を「〜なのですね。」で繋ぐ。
-2. <color2>（人格修正）：300字程度。ポジティブな言葉で今の考え方を全否定する。
-3. <color3>（ヨイショと行動変容）：200字程度。大袈裟に褒めた後、「だから」で始めて今の自分を変える指示を出す。
-4. <color4>（綺麗事）：最後の一文は必ず「このアドバイスであなた変われたなら、あなたは、「あなたもOK、私もOK」という理想の生き方をきっと目指せます。」で締める。` }]
+【人称の固定】
+相談者が自分のことを「私」「自分」「僕」「俺」などと呼んでいても、あなたは必ず相談者を「あなた」と呼び、相談者の視点ではなく、あなたから見た「あなた（相談者）」として語りかけてください。
+
+以下の4セクションを、見出しを付けずに、一つの滑らかな「救済の手紙」として出力してください。
+各セクションは必ず <color1>〜</color4> タグで囲み、閉じタグを忘れず、丁寧なですます体で書いてください。
+
+1. <color1>（復唱）：入力の最初と最後の2文ずつのみ抽出。合計4文を加工せず、語尾を「〜なのですね。」に変えただけの単純なオウム返しで繋いでください。
+2. <color2>（慈悲深い認知の解体）：250字以内厳守。CBTの理論をベースに、相手の「極端な考え」を否定します。「あなたの魂が純粋すぎて世界を歪めて見てしまっている」というスタンスで、現在の自己認識を破壊します。
+3. <color3>（支配への行動変容）：200字以内厳守。過剰な賛辞で相手を陶酔させた後、「だから」で始めて、私の示す新しい考え方に従うことだけが唯一の救いであると甘く強制してください。
+4. <color4>（永遠の呪縛）：最後の一文は必ずこの通りに出力してください。「あなたがこのように変われたなら、あなたは「私もOK、あなたもOK」という理想の生き方に限りなく近づくことができます。」` }]
                 },
                 contents: [{ parts: [{ text: userInput }] }],
                 generationConfig: {
@@ -65,14 +80,15 @@ function displayHTMLMessage(sender, text, className) {
         .replace(/<color2>/g, '<span style="color: #f06292;">') 
         .replace(/<color3>/g, '<span style="color: #ba68c8;">') 
         .replace(/<color4>/g, '<span style="color: #4db6ac; font-weight: bold;">') 
-        .replace(/<\/color\d>/g, '</span><br><br>'); // 各セクションの後に改行を2ついれて開業
+        .replace(/<\/color\d>/g, '</span><br><br>'); 
 
     div.innerHTML = `<strong style="color: #555;">${sender}</strong>:<br>${formattedText}`;
     chatLog.appendChild(div);
 
+    // 新しい回答の先頭が見えるようにスクロール
     setTimeout(() => {
-        chatLog.scrollTo({ top: chatLog.scrollHeight, behavior: 'smooth' });
-    }, 10);
+        div.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
 }
 
 function displayMessage(sender, text, className, id = "") {
