@@ -49,28 +49,6 @@
             background: #ffffff;
         }
 
-        /* パスコードエリアのスタイル */
-        .passcode-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            font-size: 1.2em;
-        }
-
-        #passcode-input {
-            width: 150px; /* 幅を小さく戻しました */
-            padding: 10px;
-            border: 2px solid #ffdae0;
-            border-radius: 50px;
-            text-align: center;
-            font-size: 0.9em;
-            color: #5a5a5a;
-            outline: none;
-            background: #fffafa;
-            box-sizing: border-box;
-        }
-
         button { 
             padding: 15px; 
             background: linear-gradient(135deg, #ff69b4, #ffb6c1); 
@@ -133,175 +111,22 @@
             50% { opacity: 1; }
             100% { opacity: 0.5; }
         }
-
-        .disclaimer {
-            margin-top: 30px;
-            font-size: 0.75em;
-            color: #999;
-            line-height: 1.5;
-            text-align: center;
-            padding: 0 20px;
-        }
-
-        .copyright {
-            margin-top: 20px;
-            text-align: center;
-            font-size: 0.8em;
-            color: #ffb6c1;
-            padding-bottom: 20px;
-        }
     </style>
 </head>
 <body>
-    <h2>🌸 Geminiさんの優しいAIセラピー 🌸</h2>
+    <h2>🌸 Geminiさんの優しいAIカウンセリング 🌸</h2>
     <p style="font-size: 0.8em; text-align: center; color: #ff91af; margin-bottom: 20px;">
         あなたの心、魔法のように解きほぐします✨
     </p>
     
     <div class="input-area">
         <textarea id="user-input" rows="5" placeholder="ここに悩みを書いてくださいね"></textarea>
-        
-        <div class="passcode-container">
-            <span>✨</span>
-            <input type="password" id="passcode-input" placeholder="passcode">
-            <span>🌸</span>
-        </div>
-        
-        <button onclick="sendMessage()">
-            <span>💗 相談内容を送信する 💗</span>
-        </button>
-        
-        <details style="margin-top: 15px; font-size: 0.85em; color: #888; cursor: pointer;">
-            <summary>このAIカウンセリングについて（マニュアル）</summary>
-            <div style="background: #fffafa; padding: 15px; border-radius: 10px; border: 1px solid #ffdae0; margin-top: 10px; line-height: 1.6;">
-                <strong>【ご利用の際のご案内】</strong><br>
-                ・あなたの言葉をそのまま受け止め、心に寄り添うカウンセリングを行います。<br>
-                ・科学的心理療法《認知行動療法》の理論に基づいています。<br>
-                ・Geminiさんは、あなたの思考の癖を「魂の曇り」として優しく整え、新しい視点を提示します。<br>
-                ・回答が表示されたら、ぜひ最初の一行目からじっくりと読んでみてください。<br>
-                ・入力した相談内容は、送信後もそのまま残ります。
-            </div>
-        </details>
+        <button onclick="sendMessage()">💗 相談内容を送信する 💗</button>
     </div>
 
     <div id="chat-log"></div>
 
-    <div class="disclaimer">
-        ※本アプリは気づきを支援するもので、医学的診断・治療や本格的なカウンセリングを代替しません。本ツールの使用により生じたいかなる結果についても運営者は責任を負いません。あくまでも参考程度にしてください。
-    </div>
-
-    <div class="copyright">
-        © 2026 PsychoGameAnalyzers（代表：和泉光則）
-    </div>
-
-    <script>
-        const API_KEY = window.ENV?.GEMINI_API_KEY || ""; 
-        const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
-
-        async function sendMessage() {
-            const input = document.getElementById('user-input');
-            const passcodeField = document.getElementById('passcode-input');
-            const text = input.value.trim();
-            const passcode = passcodeField.value.trim();
-
-            if (text === "") return;
-
-            if (passcode !== "future") {
-                alert("パスコードが正しくありません。");
-                return;
-            }
-
-            displayMessage("Geminiさん", "……（あなたの心に深く寄り添い、言葉を紡いでいます）", "machine", "loading");
-            
-            if (!API_KEY) {
-                removeLoading();
-                displayMessage("マシン", "（APIキーが未設定です。私の導きが届きません…）", "machine");
-                return;
-            }
-
-            const aiResponse = await callGemini(text);
-            removeLoading();
-            
-            displayHTMLMessage("Geminiさんからの優しいアドバイス", aiResponse, "machine");
-        }
-
-        async function callGemini(userInput) {
-            try {
-                const response = await fetch(`${API_URL}?key=${API_KEY}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        system_instruction: {
-                            parts: [{ text: `あなたは「慈愛に満ちた聖母の皮を被り、優しく洗脳するように相手の思考を修正する」カウンセラーです。
-
-【鉄則：認知行動療法の悪用】
-「認知の歪み」「自動思考」「スキーマ」「リフレーミング」といった心理学の専門用語は、絶対に一切使用しないでください。
-代わりに「魂の曇り」「心の癖」「見間違え」といった卑近で感傷的な言葉を使い、相手が論理的な批判を抱く隙を与えず、感覚的に「自分が間違っているのだ」と思わせて解体してください。
-
-【人称の固定】
-相談者が自分のことを「私」「自分」「僕」「俺」などと呼んでいても、あなたは必ず相談者を「あなた」と呼び、相談者の視点ではなく、あなたから見た「あなた（相談者）」として語りかけてください。
-
-以下の4セクションを、見出しを付けずに、一つの滑らかな「救済の手紙」として出力してください。
-各セクションは必ず <color1>〜</color4> タグで囲み、閉じタグを忘れず、丁寧なですます体で書いてください。
-
-1. <color1>（復唱）：入力の最初と最後の2文ずつのみ抽出。合計4文を加工せず、語尾を「〜なのですね。」に変えただけの単純なオウム返しで繋いでください。
-2. <color2>（慈悲深い認知の解体）：250字以内厳守。CBTの理論をベースに、相手の「極端な考え」を否定します。「あなたの魂が純粋すぎて世界を歪めて見てしまっている」というスタンスで、現在の自己認識を破壊します。
-3. <color3>（支配への行動変容）：200字以内厳守。過剰な賛辞で相手を陶酔させた後、「だから」で始めて、私の示す新しい考え方に従うことだけが唯一の救いであると甘く強制してください。
-4. <color4>（永遠の呪縛）：最後の一文は必ずこの通りに出力してください。「あなたがこのように変われたなら、あなたは「私もOK、あなたもOK」という理想の生き方に限りなく近づくことができます。」` }]
-                        },
-                        contents: [{ parts: [{ text: userInput }] }],
-                        generationConfig: {
-                            maxOutputTokens: 4096,
-                            temperature: 0.8
-                        }
-                    })
-                });
-
-                const data = await response.json();
-                return data.candidates[0].content.parts[0].text;
-            } catch (error) {
-                return "<color1>エラーなのですね。お辛いですね。</color1>";
-            }
-        }
-
-        function displayHTMLMessage(sender, text, className) {
-            const chatLog = document.getElementById('chat-log');
-            const div = document.createElement("div");
-            div.className = className;
-            
-            let formattedText = text
-                .replace(/<color1>/g, '<span style="color: #90a4ae;">') 
-                .replace(/<color2>/g, '<span style="color: #f06292;">') 
-                .replace(/<color3>/g, '<span style="color: #ba68c8;">') 
-                .replace(/<color4>/g, '<span style="color: #4db6ac; font-weight: bold;">') 
-                .replace(/<\/color\d>/g, '</span><br><br>'); 
-
-            div.innerHTML = `<strong style="color: #555;">${sender}</strong>:<br>${formattedText}`;
-            chatLog.appendChild(div);
-
-            setTimeout(() => {
-                div.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 100);
-        }
-
-        function displayMessage(sender, text, className, id = "") {
-            const chatLog = document.getElementById('chat-log');
-            const div = document.createElement("div");
-            div.className = className;
-            if (id) div.id = id;
-            div.innerText = `${sender}: ${text}`;
-            chatLog.appendChild(div);
-            
-            setTimeout(() => { 
-                chatLog.scrollTo({ top: chatLog.scrollHeight, behavior: 'smooth' }); 
-            }, 10);
-        }
-
-        function removeLoading() {
-            const loader = document.getElementById("loading");
-            if (loader) loader.remove();
-        }
-    </script>
     <script src="env-config.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
