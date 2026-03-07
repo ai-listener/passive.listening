@@ -37,12 +37,12 @@
     <div id="chat-log"></div>
 
     <div class="disclaimer">※本アプリは気づきを支援するもので、医学的診断・治療を代替しません。</div>
-    
     <div class="copyright">© 2026 PsychoGameAnalyzers（代表：和泉光則）</div>
 
     <script src="env-config.js"></script>
 
     <script>
+        // Gemini 2.5 Flash の設定を維持
         const API_KEY = window.ENV?.GEMINI_API_KEY || ""; 
         const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
 
