@@ -49,6 +49,20 @@
             background: #ffffff;
         }
 
+        /* パスコード欄のスタイル */
+        #passcode-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ffdae0;
+            border-radius: 50px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #5a5a5a;
+            outline: none;
+            background: #fffafa;
+            box-sizing: border-box;
+        }
+
         button { 
             padding: 15px; 
             background: linear-gradient(135deg, #ff69b4, #ffb6c1); 
@@ -120,6 +134,15 @@
             text-align: center;
             padding: 0 20px;
         }
+
+        /* コピーライトのスタイル */
+        .copyright {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.8em;
+            color: #ffb6c1;
+            padding-bottom: 20px;
+        }
     </style>
 </head>
 <body>
@@ -131,14 +154,11 @@
     <div class="input-area">
         <textarea id="user-input" rows="5" placeholder="ここに悩みを書いてくださいね"></textarea>
         
-        <div style="display: flex; gap: 10px; align-items: center; justify-content: center;">
-            <input type="password" id="passcode-input" placeholder="passcode" 
-                style="width: 150px; padding: 12px; border-radius: 50px; border: 2px solid #ffdae0; text-align: center; font-size: 0.9em; color: #5a5a5a; outline: none; background: #fffafa;">
-            
-            <button onclick="sendMessage()" style="flex-grow: 1; padding: 15px;">
-                <span>💗 相談内容を送信する 💗</span>
-            </button>
-        </div>
+        <input type="password" id="passcode-input" placeholder="passcodeを入力してください" >
+        
+        <button onclick="sendMessage()">
+            <span>💗 相談内容を送信する 💗</span>
+        </button>
         
         <details style="margin-top: 15px; font-size: 0.85em; color: #888; cursor: pointer;">
             <summary>このAIカウンセリングについて（マニュアル）</summary>
@@ -159,6 +179,10 @@
         ※本アプリは気づきを支援するもので、医学的診断・治療や本格的なカウンセリングを代替しません。本ツールの使用により生じたいかなる結果についても運営者は責任を負いません。あくまでも参考程度にしてください。
     </div>
 
+    <div class="copyright">
+        © 2026 PsychoGameAnalyzers（代表：和泉光則）
+    </div>
+
     <script>
         const API_KEY = window.ENV?.GEMINI_API_KEY || ""; 
         const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
@@ -171,7 +195,6 @@
 
             if (text === "") return;
 
-            // パスコードチェック
             if (passcode !== "future") {
                 alert("パスコードが正しくありません。");
                 return;
