@@ -1,4 +1,5 @@
 const API_KEY = window.ENV?.GEMINI_API_KEY || ""; 
+// ご指定通り 2.5-flash を使用します
 const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
 
 async function sendMessage() {
@@ -15,8 +16,7 @@ async function sendMessage() {
         return;
     }
 
-    // 質問文は入力欄に残し、回答欄には表示しません
-    
+    // ユーザーの入力は残し、AIの思考中を表示
     displayMessage("Geminiさん", "……（あなたの心に深く寄り添い、言葉を紡いでいます）", "machine", "loading");
     
     if (!API_KEY) {
@@ -80,15 +80,15 @@ function displayHTMLMessage(sender, text, className) {
         .replace(/<color2>/g, '<span style="color: #f06292;">') 
         .replace(/<color3>/g, '<span style="color: #ba68c8;">') 
         .replace(/<color4>/g, '<span style="color: #4db6ac; font-weight: bold;">') 
-        .replace(/<\/color\d>/g, '</span><br>'); 
+        .replace(/<\/color\d>/g, '</span><br><br>'); 
 
     div.innerHTML = `<strong style="color: #555;">${sender}</strong>:<br>${formattedText}`;
     chatLog.appendChild(div);
 
-    // 回答が表示された際、一番上（第一行）から見えるようにスクロール
+    // 新しい回答の先頭が見えるようにスクロール
     setTimeout(() => {
-        chatLog.scrollTo({ top: 0, behavior: 'smooth' });
-    }, 10);
+        div.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
 }
 
 function displayMessage(sender, text, className, id = "") {
