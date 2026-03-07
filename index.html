@@ -5,158 +5,103 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>💗 Geminiさんの優しいAIカウンセリング 💗</title>
     <style>
-        body { 
-            font-family: 'Hiragino Maru Gothic ProN', 'Yu Gothic', sans-serif; 
-            max-width: 700px; 
-            margin: 20px auto; 
-            padding: 20px; 
-            background: #fff0f5; 
-            color: #5a5a5a;
-        }
-
-        h2 { 
-            text-align: center; 
-            color: #ff69b4; 
-            text-shadow: 2px 2px 0px #ffffff;
-            font-size: 1.8em;
-        }
-
-        .input-area { 
-            display: flex; 
-            flex-direction: column; 
-            gap: 12px; 
-            background: white;
-            padding: 20px;
-            border-radius: 25px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            margin-bottom: 30px; 
-        }
-
-        textarea { 
-            width: 100%; 
-            padding: 15px; 
-            border: 2px solid #ffdae0; 
-            border-radius: 15px; 
-            font-size: 15px; 
-            resize: none; 
-            box-sizing: border-box; 
-            outline: none;
-            background: #fffafa;
-        }
-
-        textarea:focus {
-            border-color: #ff69b4;
-            background: #ffffff;
-        }
-
-        button { 
-            padding: 15px; 
-            background: linear-gradient(135deg, #ff69b4, #ffb6c1); 
-            color: white; 
-            border: none; 
-            border-radius: 50px; 
-            cursor: pointer; 
-            font-weight: bold; 
-            font-size: 1.1em; 
-            transition: transform 0.2s, box-shadow 0.2s;
-            box-shadow: 0 4px 0px #db7093;
-        }
-
-        button:hover { 
-            transform: translateY(-2px);
-            box-shadow: 0 6px 0px #db7093;
-        }
-
-        button:active {
-            transform: translateY(2px);
-            box-shadow: none;
-        }
-
-        #chat-log { 
-            height: 480px; 
-            overflow-y: auto; 
-            background: rgba(255, 255, 255, 0.9); 
-            border-radius: 25px; 
-            padding: 25px; 
-            box-shadow: 0 8px 20px rgba(255, 182, 193, 0.4); 
-            border: 4px dashed #ffb6c1; 
-        }
-
-        .user { 
-            color: #7a7a7a; 
-            margin-bottom: 20px; 
-            text-align: right; 
-            padding-left: 20%; 
-            font-size: 0.85em; 
-        }
-
-        .machine { 
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 18px;
-            margin-bottom: 30px; 
-            box-shadow: 4px 4px 0px #ffc0cb;
-            line-height: 1.8;
-            position: relative;
-        }
-
-        #loading {
-            color: #ff69b4;
-            font-style: italic;
-            animation: blink 1s infinite;
-        }
-
-        @keyframes blink {
-            0% { opacity: 0.5; }
-            50% { opacity: 1; }
-            100% { opacity: 0.5; }
-        }
-
-        .disclaimer {
-            margin-top: 30px;
-            font-size: 0.75em;
-            color: #999;
-            line-height: 1.5;
-            text-align: center;
-            padding: 0 20px;
-        }
+        body { font-family: sans-serif; max-width: 700px; margin: 20px auto; padding: 20px; background: #fff0f5; color: #5a5a5a; }
+        h2 { text-align: center; color: #ff69b4; }
+        .input-area { display: flex; flex-direction: column; gap: 12px; background: white; padding: 20px; border-radius: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 30px; }
+        textarea { width: 100%; padding: 15px; border: 2px solid #ffdae0; border-radius: 15px; resize: none; box-sizing: border-box; outline: none; }
+        .passcode-container { display: flex; justify-content: center; margin-bottom: 5px; }
+        #passcode-input { width: 150px; padding: 10px; border: 2px solid #ffdae0; border-radius: 50px; text-align: center; outline: none; }
+        button { padding: 15px; background: linear-gradient(135deg, #ff69b4, #ffb6c1); color: white; border: none; border-radius: 50px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 0px #db7093; }
+        #chat-log { height: 480px; overflow-y: auto; background: white; border-radius: 25px; padding: 25px; border: 4px dashed #ffb6c1; }
+        .machine { background: #ffffff; border-radius: 20px; padding: 18px; margin-bottom: 30px; box-shadow: 4px 4px 0px #ffc0cb; line-height: 1.8; }
+        #loading { color: #ff69b4; animation: blink 1s infinite; }
+        @keyframes blink { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+        .disclaimer { margin-top: 30px; font-size: 0.75em; color: #999; text-align: center; }
+        .copyright { margin-top: 20px; text-align: center; font-size: 0.8em; color: #ffb6c1; padding-bottom: 20px; }
     </style>
 </head>
 <body>
-    <h2>🌸 Geminiさんの優しいAIセラピー 🌸</h2>
-    <p style="font-size: 0.8em; text-align: center; color: #ff91af; margin-bottom: 20px;">
-        あなたの心、魔法のように解きほぐします✨
-    </p>
-    
+    <h2>Geminiさんの優しいAIセラピー</h2>
     <div class="input-area">
         <textarea id="user-input" rows="5" placeholder="ここに悩みを書いてくださいね"></textarea>
         
-        <button onclick="sendMessage()" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 10px 15px;">
-            <span>💗 パスコードを入力して送信 💗</span>
-            <input type="password" id="passcode-input" placeholder="passcode" 
-                style="width: 120px; padding: 5px; border-radius: 10px; border: none; text-align: center; font-size: 0.8em; color: #5a5a5a; outline: none;">
-        </button>
+        <div class="passcode-container">
+            <input type="password" id="passcode-input" placeholder="passcode">
+        </div>
         
-        <details style="margin-top: 15px; font-size: 0.85em; color: #888; cursor: pointer;">
-            <summary>このAIカウンセリングについて（マニュアル）</summary>
-            <div style="background: #fffafa; padding: 15px; border-radius: 10px; border: 1px solid #ffdae0; margin-top: 10px; line-height: 1.6;">
-                <strong>【ご利用の際のご案内】</strong><br>
-                ・あなたの言葉をそのまま受け止め、心に寄り添うカウンセリングを行います。<br>
-                ・科学的心理療法《認知行動療法》の理論に基づいています。<br>
-                ・Geminiさんは、あなたの思考の癖を「魂の曇り」として優しく整え、新しい視点を提示します。<br>
-                ・回答が表示されたら、ぜひ最初の一行目からじっくりと読んでみてください。<br>
-                ・入力した相談内容は、送信後もそのまま残ります。
-            </div>
-        </details>
+        <button onclick="sendMessage()">
+            <span>💗 相談内容を送信する 💗</span>
+        </button>
     </div>
 
     <div id="chat-log"></div>
 
-    <div class="disclaimer">
-        ※本アプリは気づきを支援するもので、医学的診断・治療や本格的なカウンセリングを代替しません。本ツールの使用により生じたいかなる結果についても運営者は責任を負いません。あくまでも参考程度にしてください。
-    </div>
+    <div class="disclaimer">※本アプリは気づきを支援するもので、医学的診断・治療を代替しません。</div>
+    
+    <div class="copyright">© 2026 PsychoGameAnalyzers（代表：和泉光則）</div>
 
     <script src="env-config.js"></script>
-    <script src="script.js"></script>
+
+    <script>
+        const API_KEY = window.ENV?.GEMINI_API_KEY || ""; 
+        const API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
+
+        async function sendMessage() {
+            const input = document.getElementById('user-input');
+            const passcodeField = document.getElementById('passcode-input');
+            const text = input.value.trim();
+            const passcode = passcodeField.value.trim();
+
+            if (text === "") return;
+            if (passcode !== "future") {
+                alert("パスコードが正しくありません。");
+                return;
+            }
+
+            displayMessage("Geminiさん", "……（思考を紡いでいます）", "machine", "loading");
+            
+            if (!API_KEY) {
+                removeLoading();
+                displayMessage("システム", "APIキーが読み込めていません。Renderの環境変数を確認してください。", "machine");
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}?key=${API_KEY}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        system_instruction: {
+                            parts: [{ text: `あなたは「慈愛に満ちた聖母の皮を被り、優しく洗脳するように相手の思考を修正する」カウンセラーです。専門用語は使わず「魂の曇り」などの言葉を使ってください。最後は必ず「あなたがこのように変われたなら、あなたは「私もOK、あなたもOK」という理想の生き方に限りなく近づくことができます。」で締めてください。` }]
+                        },
+                        contents: [{ parts: [{ text: text }] }]
+                    })
+                });
+
+                const data = await response.json();
+                removeLoading();
+                const aiResponse = data.candidates[0].content.parts[0].text;
+                displayMessage("Geminiさん", aiResponse, "machine");
+            } catch (error) {
+                removeLoading();
+                displayMessage("エラー", "通信に失敗しました。時間をおいて試してください。", "machine");
+            }
+        }
+
+        function displayMessage(sender, text, className, id = "") {
+            const chatLog = document.getElementById('chat-log');
+            const div = document.createElement("div");
+            div.className = className;
+            if (id) div.id = id;
+            div.innerText = `${sender}: ${text}`;
+            chatLog.appendChild(div);
+            chatLog.scrollTop = chatLog.scrollHeight;
+        }
+
+        function removeLoading() {
+            const loader = document.getElementById("loading");
+            if (loader) loader.remove();
+        }
+    </script>
 </body>
 </html>
