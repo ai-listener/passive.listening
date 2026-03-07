@@ -49,10 +49,18 @@
             background: #ffffff;
         }
 
-        /* パスコード欄のスタイル */
+        /* パスコードエリアのスタイル */
+        .passcode-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-size: 1.2em;
+        }
+
         #passcode-input {
-            width: 100%;
-            padding: 12px;
+            width: 150px; /* 幅を小さく戻しました */
+            padding: 10px;
             border: 2px solid #ffdae0;
             border-radius: 50px;
             text-align: center;
@@ -135,7 +143,6 @@
             padding: 0 20px;
         }
 
-        /* コピーライトのスタイル */
         .copyright {
             margin-top: 20px;
             text-align: center;
@@ -154,7 +161,11 @@
     <div class="input-area">
         <textarea id="user-input" rows="5" placeholder="ここに悩みを書いてくださいね"></textarea>
         
-        <input type="password" id="passcode-input" placeholder="passcodeを入力してください" >
+        <div class="passcode-container">
+            <span>✨</span>
+            <input type="password" id="passcode-input" placeholder="passcode">
+            <span>🌸</span>
+        </div>
         
         <button onclick="sendMessage()">
             <span>💗 相談内容を送信する 💗</span>
